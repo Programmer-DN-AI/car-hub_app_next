@@ -7,6 +7,16 @@ const nextConfig = {
         hostname: 'cdn.imagin.studio',
         pathname: '**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.unsplash.com',
+        pathname: '**',
+      },
     ],
   },
 };

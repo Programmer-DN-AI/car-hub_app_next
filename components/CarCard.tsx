@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { CarProps } from "@/types";
 import { CustomButton } from ".";
-import { calculateCarRent, generateCarImageUrl } from "@/utils";
+import { calculateCarRent, fetchCarImage } from "@/utils";
 import CarDetails from "./CarDetails";
 
 interface CarCardProps {
@@ -16,6 +16,21 @@ const CarCard = ({ car }: CarCardProps) => {
   const carRent = calculateCarRent(city_mpg, year);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [carImageUrl, setCarImageUrl] = useState("https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=600&fit=crop&crop=center&auto=format&q=80");
+
+  useEffect(() => {
+    const loadCarImage = async () => {
+      try {
+        const imageUrl = await fetchCarImage(car);
+        setCarImageUrl(imageUrl);
+      } catch (error) {
+        console.error('Error loading car image:', error);
+        // Keep the default placeholder image
+      }
+    };
+
+    loadCarImage();
+  }, [car]);
 
   return (
     <div className="car-card group">
@@ -37,9 +52,8 @@ const CarCard = ({ car }: CarCardProps) => {
 
       <div className="relative w-full h-40 my-3 object-contain">
         <Image
-          src={generateCarImageUrl(car)}
-          // src="/hero.png"
-          alt="car model"
+          src={carImageUrl}
+          alt={`${make} ${model} car`}
           fill
           priority
           className="object-contain"
